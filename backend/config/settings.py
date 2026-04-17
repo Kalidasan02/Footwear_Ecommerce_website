@@ -1,7 +1,6 @@
 """
 Django settings for config project.
 """
-
 import os
 import environ
 import dj_database_url
@@ -14,12 +13,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(
     DEBUG=(bool, False)
 )
+
 # Reading .env file
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # 2. CORE SECURITY SETTINGS
-SECRET_KEY = env('SECRET_KEY')
+# It will be True on your PC (from .env) and False on Render (set in dashboard)
 DEBUG = env('DEBUG')
+
+SECRET_KEY = env('SECRET_KEY')
+
+# On Render, you will add 'your-app.onrender.com' to this list in their dashboard
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
 
 # 3. APPLICATION DEFINITION
@@ -47,8 +51,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # CRITICAL: For production static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -58,7 +63,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
-CORS_ALLOW_ALL_ORIGINS = True
+
+# Update this later with your Vercel URL for better security
+CORS_ALLOW_ALL_ORIGINS = True 
 
 TEMPLATES = [
     {
@@ -78,10 +85,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # 4. DATABASE CONFIGURATION
-# Uses DATABASE_URL from .env (supports MySQL/Postgres swap automatically)
+# If DEBUG is True (Local PC), it uses your .env DATABASE_URL
+# If DEBUG is False (Production), it looks for the cloud DATABASE_URL
 DATABASES = {
     'default': dj_database_url.config(
-        default=env('DATABASE_URL')
+        default=env('DATABASE_URL'),
+        conn_max_age=600
     )
 }
 
@@ -124,6 +133,9 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# This enables WhiteNoise to serve static files even when DEBUG is False
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -133,3 +145,5 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
