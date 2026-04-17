@@ -1,0 +1,24 @@
+# --- SENSITIVE DATA (CRITICAL) ---
+.env
+
+# --- PYTHON ---
+__pycache__/
+*.py[cod]
+*$py.class
+env/
+venv/
+ENV/
+
+# --- DATABASE ---
+# Don't push your local data to GitHub
+db.sqlite3
+*.db
+
+# --- MEDIA & STATIC ---
+# Don't push user-uploaded images or collected static files
+media/
+staticfiles/
+
+# --- IDEs ---
+.vscode/
+.idea/
