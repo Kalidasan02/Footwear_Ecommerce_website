@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const API = axios.create({
-  // Use the environment variable, or fallback to local if not defined
-  baseURL: process.env.REACT_APP_API_URL || "http://127.0.0.1:8000/api/",
+  // Vite uses import.meta.env instead of process.env
+  baseURL: import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api/",
 });
 
 // Attach token automatically

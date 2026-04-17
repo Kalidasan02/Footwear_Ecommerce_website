@@ -8,7 +8,10 @@ from orders.models import Order
 from orders.utils import send_order_email
 
 
+
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+
 
 
 class CreatePaymentOrder(APIView):
