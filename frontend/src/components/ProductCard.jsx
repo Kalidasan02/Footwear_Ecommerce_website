@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 function ProductCard({ product }) {
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
@@ -18,7 +18,8 @@ function ProductCard({ product }) {
         {product.images && product.images.length > 0 ? (
           <motion.img
             whileHover={{ scale: 1.1, rotate: -2 }}
-            src={product.images[0].image}
+            /* We use VITE_API_URL but remove the /api/ part to get the base domain */
+            src={`${import.meta.env.VITE_API_URL.replace("/api/", "")}${product.images[0].image}`}
             style={styles.productImg}
             alt={product.name}
           />
@@ -27,10 +28,11 @@ function ProductCard({ product }) {
             <span style={styles.noImageText}>NO_DATA_LINK</span>
           </div>
         )}
-        
+
         {/* Price Tag Overlay */}
         <div style={styles.priceOverlay}>
-          <span style={styles.currency}>₹</span>{product.price}
+          <span style={styles.currency}>₹</span>
+          {product.price}
         </div>
       </div>
 
@@ -40,7 +42,7 @@ function ProductCard({ product }) {
           <span style={styles.brandText}>{product.brand?.toUpperCase()}</span>
           <span style={styles.categoryTag}>{product.category}</span>
         </div>
-        
+
         <h5 style={styles.productName}>{product.name}</h5>
 
         {/* Technical Progress Bar (Aesthetic Only) */}
@@ -84,7 +86,8 @@ const styles = {
     width: "100%",
     overflow: "hidden",
     position: "relative",
-    background: "radial-gradient(circle, rgba(0, 245, 255, 0.05) 0%, transparent 70%)",
+    background:
+      "radial-gradient(circle, rgba(0, 245, 255, 0.05) 0%, transparent 70%)",
   },
   productImg: {
     width: "100%",
@@ -196,7 +199,7 @@ const styles = {
     height: "10px",
     borderBottom: "2px solid #00F5FF",
     borderLeft: "2px solid #00F5FF",
-  }
+  },
 };
 
 export default ProductCard;
