@@ -6,6 +6,9 @@ import environ
 import dj_database_url
 from pathlib import Path
 from datetime import timedelta
+import cloudinary
+
+
 
 # 1. BASE DIRECTORY & ENV INITIALIZATION
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -48,6 +51,8 @@ INSTALLED_APPS = [
     'payments',
     'analytics',
     'adminpanel',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -150,3 +155,13 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+
+cloudinary.config(
+    cloud_name = env('CLOUDINARY_CLOUD_NAME'),
+    api_key = env('CLOUDINARY_API_KEY'),
+    api_secret = env('CLOUDINARY_API_SECRET'),
+)
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
