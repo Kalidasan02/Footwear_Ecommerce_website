@@ -9,10 +9,16 @@ class ProductSizeSerializer(serializers.ModelSerializer):
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = ProductImage
         fields = ['image']
 
+    def get_image(self, obj):
+        if obj.image:
+            return obj.image.url   
+        return None
 
 class ProductSerializer(serializers.ModelSerializer):
 
